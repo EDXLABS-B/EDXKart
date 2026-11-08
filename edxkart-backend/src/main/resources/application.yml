@@ -1,0 +1,27 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: edxkart-backend
+  datasource:
+    url: jdbc:h2:file:./data/edxkart;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password: ""
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: update
+  jackson:
+    default-property-inclusion: non_null
+app:
+  jwt:
+    secret: ${JWT_SECRET:edxkart-dev-secret-change-me-in-production-0123456789}
+    expiration-hours: 24
+  cors:
+    origins: ${CORS_ORIGINS:http://localhost:5173,http://localhost:3000,http://127.0.0.1:5173}
+  seed: true
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info

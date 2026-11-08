@@ -1,0 +1,25 @@
+services:
+  mysql:
+    image: mysql:8.4
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: edxkart
+    ports: ["3306:3306"]
+    volumes: [mysql-data:/var/lib/mysql]
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-proot"]
+      interval: 5s
+      retries: 20
+  api:
+    build: .
+    depends_on:
+      mysql: { condition: service_healthy }
+    environment:
+      SPRING_PROFILES_ACTIVE: mysql
+      DB_URL: jdbc:mysql://mysql:3306/edxkart?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      DB_USER: root
+      DB_PASSWORD: root
+      JWT_SECRET: change-this-to-a-long-random-string-before-deploying-123456
+    ports: ["8080:8080"]
+volumes:
+  mysql-data:
